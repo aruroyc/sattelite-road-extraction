@@ -11,27 +11,29 @@ pip install -r requirements.txt
 
 ## Approach
 
-Data exploration:
+### Data exploration:
 The data was first explored to find the following issues:
 File count mismatch - There was a mismatch in the no of sattelite images and the ground truth provided, filtering those resulted in only 1100 common images.
 
-Cutout imagery - About 30% of the data included cutout imagery, meaning atleast a section of the image was cutout and filled with white pixels. This was computed programmatically (Data Rectification.ipynb)
+### Cutout imagery:
+About 30% of the data included cutout imagery, meaning atleast a section of the image was cutout and filled with white pixels. This was computed programmatically (Data Rectification.ipynb)
 
-Less samples - In all, there were only about 1100 images suitable for training and validation.
+### Less samples:
+In all, there were only about 1100 images suitable for training and validation.
 
-Data Rectification:
+### Data Rectification:
 To rectify the cutout images, a technique of superimposition was devised that allowed pasting of a suitable (non-cutout) image on top of the cutout image and a corresponding change in the road mask as well. This resulted in a final dataset of 1107 images without any cutouts in them.
 
-Data Augmentation:
+### Data Augmentation:
 The data created from the above step was then augmented using only flip and rotate, as elastic distortions or zoom etc are rarely present in sattelite imagery sources that are orthorectified.
 
-Training:
+### Training:
 A Unet was chosen as the framework to train the segmentation problem since the upsampling-downsampling nature of the Unet is appropriate here.
 
 The choice of the encoder backbone is a matter of experimentation and a Resnet101 model was chosen randomly. Additionally, attention gates were added to the Unet with the intuition that it might supress redundant activations over the cross connections.
 The model was trained in two steps, where initially the frozen encoder model was trained with a large learning rate range and then the model layers were unfrozen and fine tuned.
 
-Results:
+## Validation:
 | epoch | train_loss | valid_loss | iou      | time  |
 |-------|------------|------------|----------|-------|
 | 0     | 0.114710   | 0.112988   | 0.333184 | 32:30 |
@@ -48,7 +50,7 @@ Results:
 
 The notebooks below can be run using an appropriate kernel with the above dependencies present.
 
-Results:
+## Test Set Results:
 | Pixel Acc% | iou%  | f1Score |
 |------------|-------|---------|
 | 96.97      | 56.34 | 71.74   |
